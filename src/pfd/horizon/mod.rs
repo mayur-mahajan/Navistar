@@ -33,7 +33,7 @@ fn setup_light(
     mut ambient_light: ResMut<AmbientLight>
 ) {
     ambient_light.color = Color::WHITE;
-    ambient_light.brightness = 0.5;
+    ambient_light.brightness = 300.0;
 }
 
 fn setup_ground(
@@ -42,16 +42,16 @@ fn setup_ground(
     mut materials: ResMut<Assets<StandardMaterial>>
 ) {
     commands.spawn((PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane::from_size(500.0))),
-        material: materials.add(GROUND_COLOR.into()),
+        mesh: meshes.add(Plane3d::default().mesh().size(500.0, 500.0)),
+        material: materials.add(GROUND_COLOR),
         ..Default::default()
     },
     Name::new("Ground")
     ));
 
     commands.spawn((PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube::new(0.2))),
-        material: materials.add(Color::WHITE.into()),
+        mesh: meshes.add(Cuboid::from_size(Vec3::splat(0.2))),
+        material: materials.add(Color::WHITE),
         ..default()
     },
     Name::new("Origin Marker")
@@ -71,32 +71,32 @@ fn update(
 }
 
 fn test_bank(
-    keys: Res<Input<KeyCode>>,
+    keys: Res<ButtonInput<KeyCode>>,
     mut roll: ResMut<Roll>,
     mut pitch: ResMut<Pitch>
 ) {
 
-    if keys.pressed(KeyCode::A) {
+    if keys.pressed(KeyCode::KeyA) {
         debug!("Bank Left");
         roll.0 += PI / 720.0;
     }
     
-    if keys.pressed(KeyCode::D) {
+    if keys.pressed(KeyCode::KeyD) {
         debug!("Bank Right");
         roll.0 -= PI / 720.0;
     }
 
-    if keys.pressed(KeyCode::W) {
+    if keys.pressed(KeyCode::KeyW) {
         debug!("Pitch Up");
         pitch.0 += PI / 720.0;
     }
 
-    if keys.pressed(KeyCode::X) {
+    if keys.pressed(KeyCode::KeyX) {
         debug!("Pitch Down");
         pitch.0 -= PI / 720.0;
     }
 
-    if keys.just_pressed(KeyCode::R) {
+    if keys.just_pressed(KeyCode::KeyR) {
         pitch.0 = 0.0;
         roll.0 = 0.0;
     }
